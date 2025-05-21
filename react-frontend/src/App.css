@@ -1,5 +1,3 @@
-/* MovieRecommender.css */
-
 /* Base styles */
 body {
   margin: 0;
@@ -44,7 +42,7 @@ body {
 .app-title {
   font-size: 2rem;
   font-weight: 600;
-  color: #facc15; /* Yellow color */
+  color: #facc15; 
   text-align: center;
   margin: 0;
 }
@@ -62,8 +60,9 @@ body {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: #facc15; /* Yellow color */
-  text-align: center;
+  margin-top: 0.5rem;
+  color: #facc15; 
+  margin-left: 0.75rem;
 }
 
 .form-grid {
@@ -80,7 +79,7 @@ body {
 
 /* Form elements */
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .genre-section {
