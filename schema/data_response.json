@@ -1,0 +1,91 @@
+{
+    "type": "object",
+    "properties": {
+        "titleId": {
+            "type": "string"
+        },
+        "year": {
+            "type": "integer"
+        },
+        "rating": {
+            "type": "number"
+        },
+        "numVotes": {
+            "type": "integer"
+        },
+        "genres": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "film-noir",
+                    "western",
+                    "musical",
+                    "sport",
+                    "game-show",
+                    "news",
+                    "music",
+                    "adult",
+                    "horror",
+                    "talk-show",
+                    "sci-fi",
+                    "mystery",
+                    "animation",
+                    "crime",
+                    "reality-tv",
+                    "action",
+                    "biography",
+                    "documentary",
+                    "fantasy",
+                    "romance",
+                    "thriller",
+                    "family",
+                    "adventure",
+                    "history",
+                    "war",
+                    "short",
+                    "comedy",
+                    "drama"
+                ]
+            }
+        },
+        "runtime": {
+            "type": "integer"
+        },
+        "titleType": {
+            "type": "string",
+            "enum": [
+				"video",
+				"movie",
+				"short",
+				"tvMovie",
+				"tvShort",
+				"tvMiniSeries",
+				"tvSeries",
+				"tvSpecial"
+            ]
+        },
+        "primaryTitle": {
+            "type": "string"
+        },
+        "originalTitle": {
+            "type": "string"
+        },
+        "adult": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "titleId",
+        "year",
+        "rating",
+        "numVotes",
+        "genres",
+        "runtime",
+        "titleType",
+        "primaryTitle",
+        "originalTitle",
+        "adult"
+    ],
+    "additionalProperties": false
+}

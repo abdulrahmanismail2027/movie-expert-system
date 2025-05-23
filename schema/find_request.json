@@ -3,7 +3,17 @@
 	"properties": {
 		"titleType": {
 			"type": "string",
-			"enum": ["tvSeries", "movie"]
+			"enum": [
+				"video",
+				"movie",
+				"short",
+				"tvMovie",
+				"tvShort",
+				"tvMiniSeries",
+				"tvSeries",
+				"tvSpecial"
+			],
+			"default": null
 		},
 		"genres": {
 			"type": "array",
@@ -60,7 +70,7 @@
 		"maxNumVotes": {
 			"type": "integer",
 			"minimum": 0,
-			"default": "inf"
+			"default": null
 		},
 		"minYear": {
 			"type": "integer",
@@ -70,7 +80,7 @@
 		"maxYear": {
 			"type": "integer",
 			"minimum": 0,
-			"default": "inf"
+			"default": null
 		},
 		"minRuntime": {
 			"type": "integer",
@@ -80,7 +90,7 @@
 		"maxRuntime": {
 			"type": "integer",
 			"minimum": 0,
-			"default": "inf"
+			"default": null
 		},
 		"adult": {
 			"type": ["boolean", "null"],
@@ -96,10 +106,9 @@
 		},
 		"limit": {
 			"type": "integer",
-			"default": 25,
+			"default": null,
 			"minimum": 0
 		}
 	},
-	"required": ["titleType"],
 	"additionalProperties": false
 }
