@@ -1,77 +1,101 @@
 import requests
 
-from classes import TitleType, Genre, Criterion
+from classes import TitleType, Genre, Criterion, Adult
 
-inf = 'inf'
-DEFAULT_LIMIT = 25
-PROLOG_SERVER = 'http://localhost:5000'
-QUERY = f'{PROLOG_SERVER}/query'
-QUERY_ONCE = f'{PROLOG_SERVER}/query-once'
+_inf = 'inf'
+_DEFAULT_LIMIT = 25
+_PROLOG_SERVER = 'http://localhost:6000'
+_QUERY = f'{_PROLOG_SERVER}/query'
+_QUERY_ONCE = f'{_PROLOG_SERVER}/query-once'
+_QUERIES = f'{_PROLOG_SERVER}/queries'
+_truth = 'truth'
 
-class System:
-    @staticmethod
-    def find(title_type: TitleType, genres: list[Genre],
-             min_rating: float = 0.0, max_rating: float = 10.0,
-             min_num_votes: int = 0, max_num_votes: int | str = inf,
-             min_year: int = 0, max_year: int | str = inf,
-             min_runtime: int = 0, max_runtime: int | str = inf,
-             adult: bool | None = None,
-             criteria: list[Criterion] | None = None,
-             limit: int = DEFAULT_LIMIT) -> list[str]:
 
-        if criteria is None:
-            criteria = []
+def _parse_result(r, var):
+    res = [
+            {
+                **x[var],
+                'adult': bool(x[var]['adult']),
+                'genres': [g if not isinstance(g, list) else '-'.join(g) for g in x[var]['genres']]
+            }
+            for x in r
+    ]
 
-        if adult is None:
-            adult = 'A'
+    unique_res = list(
+        {
+            r['titleId']: r for r in res
+        }.values()
+    )
 
-        var = 'T'
-        q = (
-            f'find({var},{title_type.value},'
-            f'{[g.value for g in genres]},'
-            f'{min_rating},{max_rating},'
-            f'{min_num_votes},{max_num_votes},'
-            f'{min_year},{max_year},'
-            f'{min_runtime},{max_runtime},'
-            f'{adult},'
-            f'{[c.value for c in criteria]}).'
-        )
+    return {
+        'titles': unique_res
+    }
 
-        r = requests.get(QUERY, params={'q': q, 'l': limit}).json()
 
-        return list(map(lambda x: x[var], r))
+def _escape(s):
+    return s.replace('\\', '\\\\').replace('"', '\\"').replace("'", "\\'")
 
-    @staticmethod
-    def data(title_id: str) -> dict | None:
-        year = 'Year'
-        rating = 'Rating'
-        num_votes = 'NumVotes'
-        runtime = 'Runtime'
-        genres = 'Genres'
-        title_type = 'TitleType'
-        primary_title = 'PrimaryTitle'
-        original_title = 'OriginalTitle'
-        adult = 'Adult'
-        truth = 'truth'
-        q = (
-            f'title({title_id},{year},'
-            f'{rating},{num_votes},'
-            f'{genres},{runtime},'
-            f'{title_type},{primary_title},'
-            f'{original_title},{adult}).'
-        )
 
-        r = requests.get(QUERY_ONCE, params={'q': q}).json()
+def _query_once(q: str) -> dict:
+    return requests.get(_QUERY_ONCE, params={'q': q}).json()
 
-        return {
-            'title_id': title_id,
-            'year': r[year],
-            'rating': r[rating],
-            'num_votes': r[num_votes],
-            'genres': r[genres],
-            'runtime': r[runtime],
-            'title_type': r[title_type],
-            'primary_title': r[primary_title],
-            'original_title': r[original_title],
-            'adult': r[truth]
-        } if r[truth] else None
+
+def _query(q: str, l: int) -> dict:
+    return requests.get(_QUERY, params={'q': q, 'l': l}).json()
+
+
+def find(title_type: TitleType | None = None, genres: list[Genre] | None = None,
+         min_rating: float = 0.0, max_rating: float = 10.0,
+         min_num_votes: int = 0, max_num_votes: int | None = None,
+         min_year: int = 0, max_year: int | None = None,
+         min_runtime: int = 0, max_runtime: int | None = None,
+         adult: bool | None = None,
+         criteria: list[Criterion] | None = None,
+         limit: int | None = None) -> dict:
+    title_type = TitleType.from_value(title_type)
+    genres = [Genre(g) for g in genres] if genres else []
+    max_num_votes = max_num_votes or _inf
+    max_year = max_year or _inf
+    max_runtime = max_runtime or _inf
+    adult = Adult.from_value(adult)
+    criteria = [Criterion(c) for c in criteria] if criteria else []
+    limit = limit or _DEFAULT_LIMIT
+
+    var = 'T'
+    q = (
+        f'find({title_type.value if isinstance(title_type, TitleType) else title_type},'
+        f'{[g.value for g in genres]},'
+        f'{min_rating},{max_rating},'
+        f'{min_num_votes},{max_num_votes},'
+        f'{min_runtime},{max_runtime},'
+        f'{min_year},{max_year},'
+        f'{adult.value},'
+        f'{[c.value for c in criteria]},'
+        f'{var}).'
+    )
+
+    r = _query(q, limit)
+
+    return _parse_result(r, var)
+
+
+def search(query: str, limit: int | None = None) -> dict:
+    limit = limit or _DEFAULT_LIMIT
+
+    var = 'T'
+    q = f'search(\"{_escape(query)}\",{var}).'
+
+    r = _query(q, limit)
+
+    return _parse_result(r, var)
+
+
+def suggest(title_ids: list[str], limit: int | None = None) -> dict:
+    limit = limit or _DEFAULT_LIMIT
+
+    var = 'T'
+    q = f'suggest({title_ids},{var}).'
+
+    r = _query(q, limit)
+
+    return _parse_result(r, var)

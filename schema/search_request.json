@@ -1,4 +1,5 @@
 {
+	"$id": "search_request",
 	"type": "object",
 	"properties": {
 		"query": {

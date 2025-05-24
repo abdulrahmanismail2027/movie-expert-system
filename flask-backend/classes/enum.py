@@ -1,9 +1,37 @@
 from enum import Enum
 
 
+class Adult(Enum):
+    TRUE = 'true'
+    FALSE = 'false'
+    NONE = '_'
+
+    @staticmethod
+    def from_value(value):
+        if value not in TitleType.__members__:
+            return Adult.NONE
+
+        return Adult(value)
+
+
 class TitleType(Enum):
-    TV_SERIES = 'tvSeries'
+    VIDEO = 'video'
     MOVIE = 'movie'
+    SHORT = 'short'
+    TV_MOVIE = 'tvMovie'
+    TV_SHORT = 'tvShort'
+    TV_MINI_SERIES = 'tvMiniSeries'
+    TV_SERIES = 'tvSeries'
+    TV_SPECIAL = 'tvSpecial'
+    NONE = '_'
+
+    @staticmethod
+    def from_value(value):
+        if value not in TitleType.__members__:
+            return TitleType.NONE
+
+        return TitleType(value)
+
 
 class Genre(Enum):
     FILM_NOIR = 'film-noir'
@@ -34,6 +62,7 @@ class Genre(Enum):
     SHORT = 'short'
     COMEDY = 'comedy'
     DRAMA = 'drama'
+
 
 class Criterion(Enum):
     FAMILY = 'family'

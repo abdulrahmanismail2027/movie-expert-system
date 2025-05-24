@@ -1,4 +1,5 @@
 {
+	"$id": "find_request",
 	"type": "object",
 	"properties": {
 		"titleType": {

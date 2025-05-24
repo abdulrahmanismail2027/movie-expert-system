@@ -1,4 +1,5 @@
 {
+	"$id": "suggest_request",
 	"type": "object",
 	"properties": {
 		"titleIds": {

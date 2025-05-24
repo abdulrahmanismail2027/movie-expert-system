@@ -7,6 +7,7 @@ import itertools as i
 import logging
 
 app = Flask(__name__)
+CORS(app)
 logger = logging.getLogger('PROLOG-SERVER')
 
 inf = 'inf'
@@ -15,21 +16,48 @@ PROLOG_DIR = 'knowledge-base'
 FACTS_DIR = os.path.join(PROLOG_DIR, 'facts')
 RULES_DIR = os.path.join(PROLOG_DIR, 'rules')
 
+FACTS = [
+    'adult',
+    'genre',
+    'num_votes',
+    'primary_title',
+    'original_title',
+    'rating',
+    'runtime',
+    'title',
+    'title_type',
+    'year',
+]
+
+RULES =[
+    'util',
+    'adult',
+    'genre',
+    'rating',
+    'year',
+    'num_votes',
+    'title_type',
+    'find',
+    'search',
+    'suggest',
+    'title'
+]
 
 def consult(filepaths: list[str]):
     for filepath in filepaths:
         logger.info(f'Consult {filepath}')
         j.consult(filepath)
 
+
 def init():
     logging.basicConfig(level=logging.INFO)
 
-    facts = [os.path.join(FACTS_DIR, fact_filename)
-                    for fact_filename in os.listdir(FACTS_DIR)]
-    rules = [os.path.join(RULES_DIR, rule_filename)
-                    for rule_filename in os.listdir(RULES_DIR)]
-    consult(rules)
+    facts = [os.path.join(FACTS_DIR, f'{fact_filename}.pl')
+                    for fact_filename in FACTS]
+    rules = [os.path.join(RULES_DIR, f'{rule_filename}.pl')
+                    for rule_filename in RULES]
     consult(facts)
+    consult(rules)
 
 @app.get('/query')
 def query():
@@ -52,7 +80,21 @@ def query_once():
 
     try:
         s = j.query_once(q)
+    except j.PrologError as e:
+        return jsonify({
+            'error': e.message
+        }), 400
 
+    return jsonify(s), 200
+
+
+@app.post('/queries')
+def queries():
+    qs = request.get_json()
+    s = []
+    try:
+        for q in qs:
+            s.append(j.query_once(q))
     except j.PrologError as e:
         return jsonify({
             'error': e.message
@@ -63,6 +105,6 @@ def query_once():
 
 if __name__ == '__main__':
     init()
-    CORS(app)
-    app.run(debug=True, port=5000, use_reloader=False)
+    app.run(debug=True, port=6000, use_reloader=False)
+
 

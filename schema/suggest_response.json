@@ -1,12 +1,13 @@
 {
+	"$id": "suggest_response",
 	"type": "object",
 	"properties": {
-		"titleIds": {
+		"titles": {
 			"type": "array",
 			"items": {
-				"type": "string"
+				"$ref": "title"
 			}
 		}
 	},
-	"required": ["titleIds"]
+	"required": ["titles"]
 }
