@@ -6,4 +6,5 @@ jsonschema
 jsonschema_default
 
 # For prolog server
+dotenv
 janus_swi
