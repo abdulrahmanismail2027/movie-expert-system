@@ -1,4 +1,4 @@
-import requests
+from request import pycurl_get as get
 
 from classes import TitleType, Genre, Criterion, Adult
 
@@ -37,11 +37,11 @@ def _escape(s):
 
 
 def _query_once(q: str) -> dict:
-    return requests.get(_QUERY_ONCE, params={'q': q}).json()
+    return get(_QUERY_ONCE, {'q': q})
 
 
 def _query(q: str, l: int) -> dict:
-    return requests.get(_QUERY, params={'q': q, 'l': l}).json()
+    return get(_QUERY, params={'q': q, 'l': l})
 
 
 def find(title_type: TitleType | None = None, genres: list[Genre] | None = None,
