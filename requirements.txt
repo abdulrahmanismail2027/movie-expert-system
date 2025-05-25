@@ -1,0 +1,9 @@
+# For flask backend
+requests
+flask
+flask_cors
+jsonschema
+jsonschema_default
+
+# For prolog server
+janus_swi
