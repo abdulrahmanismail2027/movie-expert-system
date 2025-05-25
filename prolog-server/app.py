@@ -1,10 +1,11 @@
 import os
-
+from dotenv import load_dotenv; load_dotenv()
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import janus_swi as j
 import itertools as i
 import logging
+import janus_swi as j
+
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +16,7 @@ DEFAULT_LIMIT = 25
 PROLOG_DIR = 'knowledge-base'
 FACTS_DIR = os.path.join(PROLOG_DIR, 'facts')
 RULES_DIR = os.path.join(PROLOG_DIR, 'rules')
+
 
 FACTS = [
     'adult',
