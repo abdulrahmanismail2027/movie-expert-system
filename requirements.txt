@@ -4,6 +4,7 @@ flask
 flask_cors
 jsonschema
 jsonschema_default
+pycurl
 
 # For prolog server
 dotenv
