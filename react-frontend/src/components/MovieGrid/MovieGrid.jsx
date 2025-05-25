@@ -1,4 +1,6 @@
 import classes from './MovieGrid.module.css';
+import { FaStar } from "react-icons/fa";
+import { MdAccessTimeFilled } from "react-icons/md";
 
 export default function MovieGrid({ movies, selectedMoviesIds, onMovieClick}) {
     return (
@@ -14,11 +16,11 @@ export default function MovieGrid({ movies, selectedMoviesIds, onMovieClick}) {
                         </span>
                         <div className={classes.movieStats}>
                             <div className={classes.movieRating}>
-                                <span className={classes.starIcon}>⭐</span>
+                                <FaStar className={classes.starIcon}></FaStar>
                                 <span>{movie.rating}</span>
                             </div>
                             <div className={classes.runtime}>
-                                <span className={classes.clockIcon}>⏱️</span>
+                                <MdAccessTimeFilled className={classes.clockIcon}></MdAccessTimeFilled>
                                 <span>{movie.runtime} min</span>
                             </div>
                         </div>
@@ -29,7 +31,7 @@ export default function MovieGrid({ movies, selectedMoviesIds, onMovieClick}) {
                         </div>
                     </div>
                       <a
-                          className='submit-button'
+                          className={classes.linkButton}
                           href={`https://www.imdb.com/title/${movie.titleId}`}
                           target="_blank"
                           rel="noopener noreferrer"
