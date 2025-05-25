@@ -25,6 +25,7 @@ export default function MovieRecommender() {
   const [suggestions, setSuggestions] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuggestLoading, setIsSuggestLoading] = useState(false);
   const [isRatingRange, setIsRatingRange] = useState(false);
   const [isRuntimeRange, setIsRuntimeRange] = useState(false);
   const [search , setSearch] = useState("");
@@ -111,7 +112,7 @@ export default function MovieRecommender() {
       return;
     }
 
-    setIsLoading(true);
+    setIsSuggestLoading(true);
 
     try {
       const suggestionResponse = await axios.post('http://localhost:8080/suggest', {titleIds: selectedMoviesIds});
@@ -123,7 +124,7 @@ export default function MovieRecommender() {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setIsLoading(false);
+      setIsSuggestLoading(false);
     }
   };
 
@@ -176,6 +177,11 @@ export default function MovieRecommender() {
       : [...formData.genres, genre];
     setFormData({ ...formData, genres: updatedGenres });
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit()
+    }
+  }
   
   return (
     <div className="movie-recommender">
@@ -185,9 +191,10 @@ export default function MovieRecommender() {
         </header>
         
         <div className="form-panel">
-
-          <input type="text" value={search} placeholder="Search Films..."  onChange={handleSearchChange} />
-          <button onClick={handleSearchSubmit} className="submit-button">🔍</button>
+          <div className="search-container">
+            <input type="text" value={search} placeholder="Search Films..."  onChange={handleSearchChange}  onKeyPress={handleKeyPress}/>
+            <button onClick={handleSearchSubmit} className="search-submit-button">🔍</button>
+          </div>
 
           <h2 className="panel-title">Find Your Perfect Movie</h2>
           
@@ -367,7 +374,7 @@ export default function MovieRecommender() {
                     type="radio" 
                     name="criteria"
                     value="new" 
-                    checked={formData.criteria === "new"}
+                    checked={formData.criteria.includes("new")}
                     onChange={handleChange} 
                   />
                   <span className="radio-label">New</span>
@@ -377,7 +384,7 @@ export default function MovieRecommender() {
                     type="radio" 
                     name="criteria"
                     value="classic" 
-                    checked={formData.criteria === "classic"}
+                    checked={formData.criteria.includes("classic")}
                     onChange={handleChange} 
                   />
                   <span className="radio-label">Classic</span>
@@ -436,8 +443,21 @@ export default function MovieRecommender() {
                   onMovieClick={onMovieClick}
               />
             <div className="submit-container">
-                <button onClick={handleSuggest} className="submit-button">
-                  Suggest similar titles
+                <button 
+                  onClick={handleSuggest} 
+                  className="submit-button"
+                  disabled={isSuggestLoading}
+                >
+                  {isSuggestLoading ? (
+                  <>
+                    <div className="loading-spinner"></div>
+                    Finding Suggestions...
+                  </>
+                ) : (
+                  <>
+                    Find similar titles
+                </>
+                )}
                 </button>
               </div>
             </div>
