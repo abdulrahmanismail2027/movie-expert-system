@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from 'axios';
 
 import "./App.css";
+import MovieGrid from "./components/MovieGrid/MovieGrid.jsx";
 
 export default function MovieRecommender() {
   const [formData, setFormData] = useState({
@@ -91,7 +92,7 @@ export default function MovieRecommender() {
     }
   };
 
-  const handleMovieClick = (titleId) => {
+  const onMovieClick = (titleId) => {
     const index = selectedMoviesIds.indexOf(titleId);
     if (index === -1) {
       setSelectedMoviesIds(prev => [...prev, titleId]);
@@ -424,47 +425,17 @@ export default function MovieRecommender() {
             </button>
           </div>
         </div>
+
         {/* Recommendations */}
         {recommendations.length > 0 && (
             <div className="results-panel">
               <h2 className="results-title">Movies</h2>
-              <div className="movie-grid">
-                {recommendations.map(movie => (
-                    <div key={movie.titleId}
-                         className={`movie-card ${selectedMoviesIds.includes(movie.titleId) ? 'active' : ''}`}
-                         onClick={() => handleMovieClick(movie.titleId)}
-                    >
-                      <div className="movie-info">
-                        <h3 className="movie-title">
-                          {movie.primaryTitle} ({movie.year})
-                        </h3>
-                        <div className="movie-stats">
-                          <div className="movie-rating">
-                            <span className="star-icon">⭐</span>
-                            <span>{movie.rating}</span>
-                          </div>
-                          <div className="runtime">
-                            <span className="clock-icon">⏱️</span>
-                            <span>{movie.runtime} min</span>
-                          </div>
-                        </div>
-                        <div className="genre-tags">
-                          {movie.genres.map((g, i) => (
-                              <span key={i} className="genre-tag">{g}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <span>
-                      <a
-                          href={`https://www.imdb.com/title/${movie.titleId}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                      >  <button>IMDB Link</button> </a>
-                    </span>
-                    </div>
-                ))}
-              </div>
-              <div className="submit-container">
+              <MovieGrid
+                  movies={recommendations}
+                  selectedMoviesIds={selectedMoviesIds}
+                  onMovieClick={onMovieClick}
+              />
+            <div className="submit-container">
                 <button onClick={handleSuggest} className="submit-button">
                   Suggest similar titles
                 </button>
@@ -476,37 +447,11 @@ export default function MovieRecommender() {
         {suggestions.length > 0 && (
             <div className="results-panel" style={{marginTop: '30px'}}>
               <h2 className="results-title">Suggestions</h2>
-              <div className="movie-grid">
-                {suggestions.map(movie => (
-                    <div key={movie.titleId}
-                         className="movie-card"
-                    >
-                      <div className="movie-info">
-                        <h3 className="movie-title">
-                          {movie.primaryTitle} ({movie.year})
-                        </h3>
-                        <div className="movie-stats">
-                          <div className="movie-rating">
-                            <span className="star-icon">⭐</span>
-                            <span>{movie.rating}</span>
-                          </div>
-                          <div className="runtime">
-                            <span className="clock-icon">⏱️</span>
-                            <span>{movie.runtime} min</span>
-                          </div>
-                        </div>
-                        <div className="genre-tags">
-                          {movie.genres.map((g, i) => (
-                              <span key={i} className="genre-tag">{g}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                ))}
-              </div>
+              <MovieGrid
+                movies={suggestions}
+              />
             </div>
         )}
-
       </div>
     </div>
   );

@@ -1,0 +1,77 @@
+.movieGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.movieCard {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    border: 3px solid transparent;
+    padding: 30px 20px
+}
+
+.movieInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.movieCardActive {
+    border: 3px solid var(--primary);
+}
+
+.movieCard:hover {
+    transform: scale(1.05);
+}
+
+.moviePoster {
+    width: 100%;
+    height: 16rem;
+    object-fit: cover;
+}
+
+.movieTitle {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.movieStats {
+    display: flex;
+    justify-content: center;
+}
+
+.movieRating {
+    display: flex;
+    align-items: center;
+}
+
+.runtime {
+    display: flex;
+    align-items: center;
+}
+
+.genreTags {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+    gap: 0.25rem;
+}
+
+.genreTag {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    background-color: #4b5563;
+    color: #e5e7eb;
+}
